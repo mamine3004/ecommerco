@@ -39,20 +39,25 @@ namespace ecommerco_proj.Repository
 
         public Task<List<Cart>> GetAllAsync()
         {
-            //return _context.carts.Include(p => p.Product).ToListAsync();
-            return _context.carts.ToListAsync();
+            return _context.carts.Include(p => p.Product).ToListAsync();
+            //return _context.carts.ToListAsync();
+        }
+
+        public Task<Cart?> getByIdAsync(int id)
+        {
+            return _context.carts.Include(p => p.Product).FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public Task<List<Cart>> GetByIdUser(string id)
         {
             var carts = _context.carts.AsQueryable();
             carts = carts.Where(p => p.AppUserId == id);
-            return carts.ToListAsync();
+            return carts.Include(p => p.Product).ToListAsync();
         }
 
         public async Task<Cart?> UpdateAsync(int id, UpdateCartDto updateCart)
         {
-            var categoryModel = await _context.carts.FirstOrDefaultAsync(x => x.Id == id);
+            var categoryModel = await _context.carts.Include(p => p.Product).FirstOrDefaultAsync(x => x.Id == id);
             if (categoryModel == null)
             {
                 return null;

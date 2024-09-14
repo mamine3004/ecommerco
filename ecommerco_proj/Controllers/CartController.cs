@@ -5,7 +5,9 @@ using ecommerco_proj.Mappers;
 using ecommerco_proj.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Drawing.Printing;
 
 namespace ecommerco_proj.Controllers
 {
@@ -17,12 +19,14 @@ namespace ecommerco_proj.Controllers
         private readonly CategoryContext _context;
         private readonly ICartRepository _cartRepo;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IProductRepository _productRepo;
 
-        public CartController(CategoryContext context, ICartRepository cartRepo, UserManager<AppUser> userManager)
+        public CartController(CategoryContext context, ICartRepository cartRepo, UserManager<AppUser> userManager, IProductRepository productRepo)
         {
             _context = context;
             _cartRepo = cartRepo;
             _userManager = userManager;
+            _productRepo = productRepo;
         }
 
         [HttpGet]
@@ -33,22 +37,71 @@ namespace ecommerco_proj.Controllers
             return Ok(cartsDto);
         }
 
-        //[HttpPost("{ProductId:int}/{userName:String}")]
-        //public async Task<IActionResult> Create([FromRoute] int ProductId, CreateCartDtocs productDto)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
-        //    //            int categoryId = productModel.CategoryId;
-        //    if (!await _cartRepo.CategoryExist(CategoryId))
-        //    {
-        //        return BadRequest("category id not exists");
-        //    }
-        //    var productModel = productDto.ToProductFromCreateDto(CategoryId);
-        //    await _productRepo.createAsync(productModel);
+        [HttpPost("{ProductId:int}/{userName}")]
 
-        //    return CreatedAtAction(nameof(GetId), new { id = productModel.Id }, productModel.ToProductDto());
+        public async Task<IActionResult> Create([FromRoute] int ProductId, [FromRoute] string userName, CreateCartDtocs cartDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            //            int categoryId = productModel.CategoryId;
+            if (!await _productRepo.ProductExist(ProductId))
+            {
+                return BadRequest("category id not exists");
+            }
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName.ToLower());
 
-        //}
+            if (user == null) return BadRequest("Invalid username!");
+
+            var cartModel = cartDto.ToCartFromCreateDto(ProductId,user.Id);
+            await _cartRepo.CreateAsync(cartModel);
+
+            return CreatedAtAction(nameof(GetId), new { id = cartModel.Id }, cartModel.ToCartDto());
+
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetId([FromRoute] int id)
+        {
+            var cart = await _cartRepo.getByIdAsync(id);
+            if (cart == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(cart.ToCartDto());
+        }
+
+
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCartDto updateCart)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var cartModel = await _cartRepo.UpdateAsync(id, updateCart);
+            if (cartModel == null)
+            {
+                return NotFound("product not exists");
+            }
+
+            return Ok(cartModel.ToCartDto());
+
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var cartModel = await _cartRepo.DeleteAsync(id);
+            if (cartModel == null)
+            {
+                return NotFound("product not exists");
+            }
+
+            return Ok(cartModel.ToCartDto());
+
+        }
 
 
     }

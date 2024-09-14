@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ecommerco_proj;
 
@@ -11,9 +12,11 @@ using ecommerco_proj;
 namespace ecommerco_proj.Migrations
 {
     [DbContext(typeof(CategoryContext))]
-    partial class CategoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240914192308_cart3")]
+    partial class cart3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace ecommerco_proj.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1b72d778-cacd-4633-95e8-298110ccfcdd",
+                            Id = "f89e4267-c366-4fde-b96c-2bae54234556",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b7dff641-d9fd-414b-83b1-5e23b7d6d6bb",
+                            Id = "e11a74db-aadd-4e5e-a76d-68c09a242530",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -381,7 +384,7 @@ namespace ecommerco_proj.Migrations
                         .IsRequired();
 
                     b.HasOne("ecommerco_proj.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("Carts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -410,6 +413,11 @@ namespace ecommerco_proj.Migrations
             modelBuilder.Entity("ecommerco_proj.Models.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ecommerco_proj.Models.Product", b =>
+                {
+                    b.Navigation("Carts");
                 });
 #pragma warning restore 612, 618
         }

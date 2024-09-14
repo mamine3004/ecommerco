@@ -72,6 +72,11 @@ namespace ecommerco_proj.Repository
             return _context.products.FirstOrDefaultAsync(i => i.Id == id);
         }
 
+        public Task<bool> ProductExist(int id)
+        {
+            return _context.products.AnyAsync(i => i.Id == id);
+        }
+
         public async Task<Product?> UpdateAsync(int id, UpdateProductDto updateProduct)
         {
             var productModel = await _context.products.FirstOrDefaultAsync(x => x.Id == id);

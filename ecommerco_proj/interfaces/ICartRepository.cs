@@ -7,6 +7,7 @@ namespace ecommerco_proj.interfaces
     {
         Task<List<Cart>> GetAllAsync();
         Task<List<Cart>> GetByIdUser(string id);
+        Task<Cart?> getByIdAsync(int id);
         Task<Cart?> CreateAsync(Cart cartModel);
         Task<Cart?> UpdateAsync(int id, UpdateCartDto updateCart);
         Task<Cart?> DeleteAsync(int id);

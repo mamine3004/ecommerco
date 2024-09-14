@@ -11,5 +11,7 @@ namespace ecommerco_proj.interfaces
         Task<Product?> createAsync(Product productModel);
         Task<Product?> UpdateAsync(int id, UpdateProductDto updateProduct);
         Task<Product?> DeleteAsync(int id);
+        Task<bool> ProductExist(int id);
+
     }
 }

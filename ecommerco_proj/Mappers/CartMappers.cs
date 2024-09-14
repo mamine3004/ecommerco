@@ -1,7 +1,5 @@
 ﻿using ecommerco_proj.DTOs.Cart;
-using ecommerco_proj.DTOs.product;
 using ecommerco_proj.Models;
-using Microsoft.CodeAnalysis;
 
 namespace ecommerco_proj.Mappers
 {
@@ -11,15 +9,20 @@ namespace ecommerco_proj.Mappers
         {
             return new CartDto
             {
+                Id = cartModel.Id,
                 Qty = cartModel.Qty,
-                Product = cartModel.Product.ToProductDto(),
+                Product = cartModel.Product,
+                AppUserId = cartModel.AppUserId,
+                AppUser = cartModel.AppUser,
+                ProductId = cartModel.ProductId,
             };
         }
-        public static Cart ToCartFromCreateDto(this CreateCartDtocs createProductRequestDto, int ProductId, string AppUserId)
+        public static Cart ToCartFromCreateDto(this CreateCartDtocs createCartRequestDto, int ProductId, string AppUserId)
         {
+
             return new Cart
             {
-                Qty = createProductRequestDto.Qty,
+                Qty = createCartRequestDto.Qty,
                 ProductId = ProductId,
                 AppUserId = AppUserId,
             };
