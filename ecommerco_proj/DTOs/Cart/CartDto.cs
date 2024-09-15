@@ -8,13 +8,13 @@ namespace ecommerco_proj.DTOs.Cart
     {
         public int Id { get; set; }
 
-        public string AppUserId { get; set; }
+//        public string AppUserId { get; set; }
         public int ProductId { get; set; }
 
         public decimal Qty { get; set; }
 
         public Product? Product { get; set; }
-        public AppUser? AppUser { get; set; }
+//        public AppUser? AppUser { get; set; }
 
     }
 }

@@ -12,8 +12,8 @@ namespace ecommerco_proj.Mappers
                 Id = cartModel.Id,
                 Qty = cartModel.Qty,
                 Product = cartModel.Product,
-                AppUserId = cartModel.AppUserId,
-                AppUser = cartModel.AppUser,
+//                AppUserId = cartModel.AppUserId,
+ //               AppUser = cartModel.AppUser,
                 ProductId = cartModel.ProductId,
             };
         }

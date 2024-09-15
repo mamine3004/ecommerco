@@ -37,6 +37,19 @@ namespace ecommerco_proj.Controllers
             return Ok(cartsDto);
         }
 
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetUsername([FromRoute] string username)
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == username.ToLower());
+
+            if (user == null) return BadRequest("Invalid username!");
+
+            var carts = await _cartRepo.GetByIdUser(user.Id);
+            var cartsDto = carts.Select(s => s.ToCartDto());
+            return Ok(cartsDto);
+        }
+
+
         [HttpPost("{ProductId:int}/{userName}")]
 
         public async Task<IActionResult> Create([FromRoute] int ProductId, [FromRoute] string userName, CreateCartDtocs cartDto)
